@@ -1,0 +1,14 @@
+{
+  "name": "tente-buyer",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Offline-first buying app for Tente Mushrooms",
+  "scripts": {
+    "test": "node --test --test-force-exit --test-concurrency=1 test/*.test.mjs",
+    "serve": "node test/server.mjs"
+  },
+  "devDependencies": {
+    "playwright": "1.56.1"
+  }
+}

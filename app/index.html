@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#0b4f1c">
+  <meta name="description" content="Tente Mushrooms buying app">
+  <title>Tente Buyer</title>
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icons/icon-192.png">
+  <link rel="apple-touch-icon" href="icons/icon-192.png">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <!-- Always visible: how many purchases are waiting and when the phone last synced. -->
+  <header id="status" class="status hidden" aria-live="polite">
+    <div class="status-main">
+      <span id="pending-badge" class="badge">0 waiting</span>
+      <span id="last-sync">Last sync: never</span>
+    </div>
+    <button id="sync-btn" class="btn small">Sync now</button>
+  </header>
+  <div id="stale-warning" class="warning-bar hidden"></div>
+  <div id="update-bar" class="info-bar hidden">
+    New version ready. <button id="update-btn" class="btn small">Update</button>
+  </div>
+
+  <main>
+    <!-- LOGIN -->
+    <section id="view-login" class="view hidden">
+      <h1>Tente Buyer</h1>
+      <p class="muted">Log in once with internet. After that the app works with no signal.</p>
+      <form id="login-form" autocomplete="off">
+        <label>Agent code
+          <input id="login-code" class="big-input" autocapitalize="characters" required placeholder="e.g. MW1">
+        </label>
+        <label>PIN
+          <input id="login-pin" class="big-input" type="password" inputmode="numeric" pattern="[0-9]*" required>
+        </label>
+        <p id="login-error" class="error-text" role="alert"></p>
+        <button class="btn primary block" type="submit" id="login-btn">Log in</button>
+      </form>
+    </section>
+
+    <!-- NEW PURCHASE -->
+    <section id="view-new" class="view hidden">
+      <form id="purchase-form" novalidate autocomplete="off">
+        <div class="grid">
+          <div class="cell">
+            <div class="row2">
+              <label>Date <input id="f-date" type="date" class="mid-input" required></label>
+              <label>Buying point <select id="f-point" class="mid-input"></select></label>
+            </div>
+            <div class="lot-row">
+              <span>Lot <strong id="f-lot">–</strong></span>
+              <button type="button" id="new-lot-btn" class="btn small">Start new lot</button>
+            </div>
+
+            <label>Picker name
+              <input id="f-picker" class="big-input" list="pickers" autocapitalize="words" enterkeyhint="next">
+            </label>
+            <datalist id="pickers"></datalist>
+
+            <fieldset><legend>Species</legend><div id="f-species" class="choices"></div></fieldset>
+            <fieldset><legend>Grade</legend><div id="f-grade" class="choices grades"></div>
+              <p id="grade-desc" class="muted small-text"></p></fieldset>
+          </div>
+
+          <div class="cell">
+            <div class="row2">
+              <label>Gross kg <input id="f-gross" class="big-input num" inputmode="decimal" enterkeyhint="next"></label>
+              <label>Crate tare kg <input id="f-tare" class="big-input num" inputmode="decimal" enterkeyhint="next"></label>
+            </div>
+            <label>Price K per kg <input id="f-price" class="big-input num" inputmode="decimal" enterkeyhint="done"></label>
+
+            <div class="calc" aria-live="polite">
+              <div><span class="calc-label">Net</span><span id="calc-net" class="calc-value">– kg</span></div>
+              <div><span class="calc-label">Pay</span><span id="calc-amount" class="calc-value">K –</span></div>
+            </div>
+
+            <fieldset><legend>Payment</legend><div id="f-payment" class="choices"></div></fieldset>
+            <fieldset><legend>Sent to</legend><div id="f-sentto" class="choices"></div></fieldset>
+            <label>Notes (optional) <input id="f-notes" class="mid-input" maxlength="200"></label>
+            <p class="muted small-text">Next receipt: <strong id="f-receipt">–</strong></p>
+            <div id="form-errors" class="error-text" role="alert"></div>
+            <button type="submit" class="btn primary block huge" id="save-btn">Check &amp; save</button>
+          </div>
+        </div>
+      </form>
+    </section>
+
+    <!-- RECEIPT -->
+    <section id="view-receipt" class="view hidden">
+      <div id="receipt" class="receipt"></div>
+      <div class="actions">
+        <button id="receipt-new" class="btn primary block huge">New purchase</button>
+        <button id="receipt-share" class="btn block">Share receipt</button>
+        <button id="receipt-void" class="btn danger block">Void this purchase</button>
+      </div>
+    </section>
+
+    <!-- TODAY -->
+    <section id="view-today" class="view hidden">
+      <div class="row2 center">
+        <h2 id="today-title">Today</h2>
+        <input id="today-date" type="date" class="mid-input">
+      </div>
+      <div id="today-totals"></div>
+      <h3>Receipts</h3>
+      <ul id="today-list" class="list"></ul>
+    </section>
+
+    <!-- SYNC / MORE -->
+    <section id="view-sync" class="view hidden">
+      <h2>Sync</h2>
+      <div id="sync-details" class="card"></div>
+      <button id="sync-now-2" class="btn primary block huge">Sync now</button>
+      <h3>Emergency backup</h3>
+      <p class="muted">Use these if the phone cannot sync for a long time, or before handing the phone in.</p>
+      <button id="export-csv" class="btn block">Share unsynced as CSV file</button>
+      <button id="export-wa" class="btn block">Send unsynced by WhatsApp</button>
+      <h3>Phone</h3>
+      <div id="phone-details" class="card"></div>
+      <button id="logout-btn" class="btn danger block">Log out</button>
+    </section>
+  </main>
+
+  <nav id="tabs" class="tabs hidden">
+    <button data-view="new" class="tab">New</button>
+    <button data-view="today" class="tab">Today</button>
+    <button data-view="sync" class="tab">Sync <span id="tab-badge" class="tab-badge hidden"></span></button>
+  </nav>
+
+  <!-- Confirm / message dialog -->
+  <dialog id="dialog">
+    <form method="dialog">
+      <div id="dialog-body"></div>
+      <div class="dialog-actions">
+        <button value="cancel" id="dialog-cancel" class="btn">Back</button>
+        <button value="ok" id="dialog-ok" class="btn primary">OK</button>
+      </div>
+    </form>
+  </dialog>
+
+  <script src="config.js"></script>
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>
