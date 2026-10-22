@@ -1,6 +1,6 @@
 // Keeps a copy of the app on the phone so it opens with no signal.
 // Bump VERSION whenever any app file changes; phones then offer "Update".
-const VERSION = 'tente-1.0.0';
+const VERSION = 'tente-1.0.1';
 const FILES = [
   './', 'index.html', 'styles.css', 'config.js', 'manifest.webmanifest',
   'js/app.js', 'js/db.js', 'js/sync.js', 'js/logic.js',

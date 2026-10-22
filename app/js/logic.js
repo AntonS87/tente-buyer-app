@@ -1,7 +1,7 @@
 // Pure rules: numbers, receipt and lot numbers, validation, totals, export.
 // No browser APIs here, so the tests can run this file directly in Node.
 
-export const APP_VERSION = '1.0.0';
+export const APP_VERSION = '1.0.1';
 export const BIG_PURCHASE_KG = 60;
 export const PRICE_WARN_SHARE = 0.3; // warn when price is 30 % away from the usual one
 export const REJECT_GRADE = 'Reject';
