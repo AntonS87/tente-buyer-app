@@ -85,7 +85,7 @@ again: that makes a new URL.)
 
 1. Sign in at [github.com](https://github.com) as **AntonS87**.
 2. Click **+** (top right) → **New repository**.
-   - Name: `tente-buyer`
+   - Name: `tente-buyer-app`
    - **Public** (free Pages needs public. The code holds no passwords or data. The script URL
      is useless without an agent code and PIN.)
    - Leave "Add a README" **unticked**. Click **Create repository**.
@@ -103,7 +103,7 @@ again: that makes a new URL.)
 5. Turn on Pages: **Settings → Pages → Build and deployment → Source: Deploy from a branch →
    Branch: main, folder: / (root) → Save**.
 6. After 1–2 minutes the app is at
-   **https://antons87.github.io/tente-buyer/app/**. This is the link you send to agents.
+   **https://antons87.github.io/tente-buyer-app/app/**. This is the link you send to agents.
 
 ### Updating the app later
 Every app update must also change the version in two places, or phones keep the old copy:
